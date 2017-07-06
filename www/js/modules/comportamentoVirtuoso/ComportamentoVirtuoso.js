@@ -64,7 +64,6 @@ var ComportamentoVirtuoso = {
       document.removeEventListener('backbutton', ComportamentoVirtuoso.backButtonCallback);
     },
 
-
     reloadMenu: function ()
     {
         ComportamentoVirtuoso.print('on ReloadMenu');
@@ -316,5 +315,4 @@ var ComportamentoVirtuoso = {
             }
         }
     },
-
 }

@@ -1,6 +1,6 @@
 ﻿[
   {
-    "callback": "PrincipalMenu.logPrincipalMenuChoices('discoverCity'); PrincipalMenu.hide(); MapManager.centerMapOnGps(); ComportamentoVirtuoso.init('http://www.disit.org/km4city/resource/ad77f05cc308d96163c455e806b2694d'); SearchManager.search('ComportamentoVirtuoso');",
+    "callback": "PrincipalMenu.logPrincipalMenuChoices('discoverCity'); PrincipalMenu.hide(); MapManager.centerMapOnGps(); ComportamentoVirtuoso.init(); SearchManager.search('ComportamentoVirtuoso');",
     "iconId": "",
     "iconClass": "",
     "iconFontSize": "",
