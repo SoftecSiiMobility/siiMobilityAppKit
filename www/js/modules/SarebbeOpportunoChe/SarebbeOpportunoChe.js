@@ -11,6 +11,7 @@ var SarebbeOpportunoChe = {
     identifierModule: "SarebbeOpportunoChe",
     responseLength: 0,
     temporaryResponse: null,
+    coordinate: null,
 
     //dichiaro gli id della layout
     idMenu: "#idMenu",
@@ -51,6 +52,44 @@ var SarebbeOpportunoChe = {
             SarebbeOpportunoChe.setupMenu();
             SarebbeOpportunoChe.showMenu();
         }
+
+        MapManager.map.addEventListener('singleclick', SarebbeOpportunoChe.mapClick, false);
+        document.addEventListener('backbutton', SarebbeOpportunoChe.backButtonCallback, false);
+    },
+
+    backButtonCallback: function()
+    {
+      $( "#insertSegnalazione" ).remove();
+      MapManager.map.removeEventListener('singleclick', SarebbeOpportunoChe.mapClick);
+      document.removeEventListener('backbutton', SarebbeOpportunoChe.backButtonCallback);
+    },
+
+    mapClick: function ()
+    {
+      SarebbeOpportunoChe.print('on map click');
+      $('.popover-content').append('<h4 id="insertSegnalazione"><a onclick="SarebbeOpportunoChe.insertSegnalazione()">Inserisci segnalazione</a></h4>');
+      SarebbeOpportunoChe.coordinate = MapManager.manualMarkerCoordinates();
+    },
+
+    insertSegnalazione: function()
+    {
+      navigator.notification.prompt(Globalization.labels.messaggiAlert.insertSegnalazione, SarebbeOpportunoChe.insertAlert, 'Segnala', ['Invia', 'Annulla'])
+    },
+
+    insertAlert: function(result)
+    {
+      SarebbeOpportunoChe.print('on insert alert');
+      if(result.buttonIndex == 1) {
+        if(result.input1 == "") {
+            navigator.notification.alert('Inserire una segnalazione', SarebbeOpportunoChe.mapClick);
+        } else {
+            navigator.notification.alert('Segnalazione inserita con successo', function() {}, '');
+        }
+      }
+      else
+      {
+        SarebbeOpportunoChe.coordinate = null;
+      }
     },
 
     reloadMenu: function ()
@@ -70,6 +109,7 @@ var SarebbeOpportunoChe = {
 
     hide: function ()
     {
+        SarebbeOpportunoChe.print("hide");
         //chiudo il modulo
         SarebbeOpportunoChe.hideMenu();
         SarebbeOpportunoChe.open = false;
@@ -101,6 +141,9 @@ var SarebbeOpportunoChe = {
 
     closeAll: function ()
     {
+        SarebbeOpportunoChe.print("on closeAll");
+        $( "#insertSegnalazione" ).remove();
+        MapManager.map.removeEventListener("singleclick", SarebbeOpportunoChe.mapClick);
         if (SarebbeOpportunoChe.open)
         {
             SarebbeOpportunoChe.hide();
@@ -126,9 +169,9 @@ var SarebbeOpportunoChe = {
     search: function ()
     {
         SarebbeOpportunoChe.print('on Search');
-        var SarebbeOpportunoCheQuery = "write here query param";
+        /*var SarebbeOpportunoCheQuery = "write here query param";
         SarebbeOpportunoChe.print('query : ' + CulturalActivityQuery);
-        APIClient.executeQuery(CulturalActivityQuery, SarebbeOpportunoChe.searchInformationForEachFeature, SarebbeOpportunoChe.errorQuery);
+        APIClient.executeQuery(CulturalActivityQuery, SarebbeOpportunoChe.searchInformationForEachFeature, SarebbeOpportunoChe.errorQuery);*/
     },
 
     searchInformationForEachFeature(response)
@@ -228,6 +271,35 @@ var SarebbeOpportunoChe = {
         Loading.hideAutoSearchLoading();
     },
 
+    addMarker: function (coordinates, label) {
+
+      var manualFeature = new ol.Feature({
+        geometry: new ol.geom.Point(coordinates),
+        name: "manual"
+      });
+
+      var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon({
+            anchor: [0.5, 1],
+            size: [16, 24],
+            src: 'img/manualMarker.png'
+          })
+        });
+
+        manualFeature.setStyle(iconStyle);
+
+        var newManualMarker = new ol.layer.Vector({
+          source: new ol.source.Vector({
+            features: [manualFeature]
+          })
+        });
+
+        if (MapManager.map != null) {
+          MapManager.map.addLayer(newManualMarker);
+          newManualMarker.setZIndex(1);
+        }
+    },
+
     print: function (text)
     {
         if (SarebbeOpportunoChe.debug)
@@ -235,7 +307,6 @@ var SarebbeOpportunoChe = {
             console.log(SarebbeOpportunoChe.TAG + " : " + text);
         }
     },
-
     //////////////////// FINISH SEARCH QUERY ////////////////////
 
 }

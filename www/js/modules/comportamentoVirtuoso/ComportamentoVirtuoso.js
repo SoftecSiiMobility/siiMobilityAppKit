@@ -18,6 +18,7 @@ var ComportamentoVirtuoso = {
     idCollapseMenu: "#idCollapseMenu",
     idHeaderTitleMenu: "#idHeaderTitleMenu",
     idInnerMenu: "#idInnerMenu",
+    destination : undefined,
 
     /*
     dichiaro il nome del template da richiamare
@@ -26,8 +27,7 @@ var ComportamentoVirtuoso = {
     */
     nameTemplate: "js/modules/comportamentoVirtuoso/ComportamentoVirtuosoMainLayout.mst.html",
 
-    setupMenu: function ()
-    {
+    setupMenu: function () {
         ComportamentoVirtuoso.print('init setupMenu');
         if ($(ComportamentoVirtuoso.idMenu).length == 0)
         {
@@ -40,11 +40,12 @@ var ComportamentoVirtuoso = {
         ComportamentoVirtuoso.print('finish setupMenu');
     },
 
-    init: function ()
+    init: function (destination)
     {
         ComportamentoVirtuoso.print('on Init');
+        ComportamentoVirtuoso.destination = destination;
+        ComportamentoVirtuoso.print(ComportamentoVirtuoso.destination);
         ComportamentoVirtuoso.show();
-
         if (ComportamentoVirtuoso.startWithMenu)
         {
             ComportamentoVirtuoso.setupMenu();
@@ -125,45 +126,23 @@ var ComportamentoVirtuoso = {
     search: function ()
     {
         ComportamentoVirtuoso.print('on Search');
-        var CulturalActivityQuery = "shortestpath/?source=43.86008150000001;11.1286246&destination=http://www.disit.org/km4city/resource/ad77f05cc308d96163c455e806b2694d";
-        ComportamentoVirtuoso.print('query : ' + CulturalActivityQuery);
-        APIClient.executeQuery(CulturalActivityQuery, ComportamentoVirtuoso.searchInformationForEachFeature, ComportamentoVirtuoso.errorQuery);
+        ComportamentoVirtuoso.print(ComportamentoVirtuoso.destination);
+        if (ComportamentoVirtuoso.destination !== undefined)
+        {
+          var gpsCoordinates = MapManager.gpsMarkerCoordinates();
+          var pathQuery = "http://servicemap.disit.org/WebAppGrafo/api/v1/shortestpath/?source=" + gpsCoordinates[0] + ";" + gpsCoordinates[1] + '&destination=' + ComportamentoVirtuoso.destination + '&format=json';
+          ComportamentoVirtuoso.print('query : ' + pathQuery);
+          ComportamentoVirtuoso.executeCustomQuery(pathQuery, ComportamentoVirtuoso.searchInformationForEachFeature, ComportamentoVirtuoso.errorQuery);
+        }
     },
 
     searchInformationForEachFeature(response)
     {
         ComportamentoVirtuoso.print('on searchInformationForEachFeature');
         ComportamentoVirtuoso.print('response : ' + response);
-        MapManager.addGeometryWktElement(response["journey"]["routes"][0]["wkt"]);
-        /*
-        for (var category in response)
-        {
-            if (response[category].features.length != 0)
-            {
-                ComportamentoVirtuoso.responseLength = response[category].features.length;
-                ComportamentoVirtuoso.temporaryResponse =
-                {
-                    "Results": {
-                        "features": [],
-                        "fullCount": ComportamentoVirtuoso.responseLength,
-                        "type": "FeatureCollection",
-                    }
-                };
 
-                Loading.showAutoSearchLoading();
-                for (var i = 0; i < response[category].features.length; i++)
-                {
-                    var serviceQuery = QueryManager.createServiceQuery(response[category].features[i].properties.serviceUri, "app");
-                    APIClient.executeQueryWithoutAlert(serviceQuery, ComportamentoVirtuoso.mergeResults, ComportamentoVirtuoso.decrementAndCheckRetrieved);
-                }
-            }
-            else
-            {
-                ComportamentoVirtuoso.print('##startAutoSearch## -> ' + ComportamentoVirtuoso.identifierModule);
-                SearchManager.startAutoSearch(ComportamentoVirtuoso.identifierModule);
-            }
-        }
-        */
+        ComportamentoVirtuoso.drawWktIntoMap(response["journey"]["routes"][0]["wkt"]);
+
         ComportamentoVirtuoso.print('finish searchInformationForEachFeature');
     },
 
@@ -267,5 +246,62 @@ var ComportamentoVirtuoso = {
     },
 
     //////////////////// FINISH SEARCH QUERY ////////////////////
+    drawWktIntoMap: function (wkt) {
+      var geometryStyle = new ol.style.Style({
+          fill: new ol.style.Fill({
+              color: 'rgba(0, 0, 255, 0.3)'
+          }),
+          stroke: new ol.style.Stroke({
+              color: '#00f',
+              width: 4
+          })
+      });
+      var format = new ol.format.WKT();
+      var feature = format.readFeature(wkt);
+      feature.setStyle(geometryStyle);
+      feature.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+      var vector = new ol.layer.Vector({
+          source: new ol.source.Vector({
+            features: [feature]
+          })
+      });
+      MapManager.map.addLayer(vector);
+
+    },
+
+    executeCustomQuery: function(url, successCallback, errorCallback) {
+        if (url != null && successCallback != null) {
+            if (!APIClient.lockQuery) {
+                if (application.checkConnection()) {
+                    console.log(url);
+                    $.ajax({
+                        url: encodeURI(url),
+                        timeout: Parameters.timeoutGetQuery,
+                        method: "GET",
+                        dataType: "json",
+                        beforeSend: function () {
+                            APIClient.lockQuery = true;
+                            Loading.show();
+                        },
+                        success: function (data) {
+                            APIClient.lockQuery = false;
+                            successCallback(data);
+                        },
+                        error: function (error) {
+                            APIClient.lockQuery = false;
+                            errorCallback(error);
+                        },
+                        complete: function () {
+                            Loading.hide();
+                        }
+                    });
+                } else {
+                    navigator.notification.alert(Globalization.alerts.connectionError.message, function () { }, Globalization.alerts.connectionError.title);
+                }
+            } else {
+                APIClient.showOperationRunning();
+            }
+        }
+    },
 
 }
