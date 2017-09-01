@@ -1,10 +1,16 @@
 
 {
   "principalMenu": {
-    "titoloNelMenuPrincipaleSarebbeOpportunoChe": "SarebbeOpportunoChe"
+    "titoloNelMenuPrincipaleSarebbeOpportunoChe": "Sarebbe opportuno che..."
   },
   "menuSarebbeOpportunoChe": {
     "title": "Risultati"
+  },
+  "messaggiAlert": {
+    "insertSegnalazione": "Inserisci la segnalazione",
+    "titleSegnalazione": "Segnala",
+    "sendSegnalazione": "Invia",
+    "cancelSegnalazione": "Annulla",
+    "successSegnalazione": "Segnalazione inserita con successo",
   }
 }
-
