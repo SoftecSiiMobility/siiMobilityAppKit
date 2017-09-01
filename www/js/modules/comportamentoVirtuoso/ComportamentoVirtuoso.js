@@ -276,9 +276,6 @@ var ComportamentoVirtuoso = {
             features: [feature]
           })
       });
-      ComportamentoVirtuoso.vectorLayer = vector;
-      MapManager.map.addLayer(vector);
-
     },
 
     executeCustomQuery: function(url, successCallback, errorCallback) {
