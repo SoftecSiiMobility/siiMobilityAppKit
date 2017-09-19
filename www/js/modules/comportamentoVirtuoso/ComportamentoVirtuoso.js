@@ -10,6 +10,7 @@ var ComportamentoVirtuoso = {
     identifierModule: "ComportamentoVirtuoso",
     responseLength: 0,
     temporaryResponse: null,
+    vectorLayer: null,
 
     //dichiaro gli id della layout
     idMenu: "#idMenu",
@@ -51,7 +52,18 @@ var ComportamentoVirtuoso = {
             ComportamentoVirtuoso.setupMenu();
             ComportamentoVirtuoso.showMenu();
         }
+        document.addEventListener('backbutton', ComportamentoVirtuoso.backButtonCallback, false);
     },
+
+    backButtonCallback: function()
+    {
+      if(ComportamentoVirtuoso.vectorLayer != null)
+      {
+          MapManager.map.removeLayer(ComportamentoVirtuoso.vectorLayer);
+      }
+      document.removeEventListener('backbutton', ComportamentoVirtuoso.backButtonCallback);
+    },
+
 
     reloadMenu: function ()
     {
@@ -265,6 +277,7 @@ var ComportamentoVirtuoso = {
             features: [feature]
           })
       });
+      ComportamentoVirtuoso.vectorLayer = vector;
       MapManager.map.addLayer(vector);
 
     },
