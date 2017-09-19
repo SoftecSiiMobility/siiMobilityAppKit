@@ -130,7 +130,7 @@ var ComportamentoVirtuoso = {
         if (ComportamentoVirtuoso.destination !== undefined)
         {
           var gpsCoordinates = MapManager.gpsMarkerCoordinates();
-          var pathQuery = "http://servicemap.disit.org/WebAppGrafo/api/v1/shortestpath/?source=" + gpsCoordinates[0] + ";" + gpsCoordinates[1] + '&destination=' + ComportamentoVirtuoso.destination + '&format=json';
+          var pathQuery = "http://www.disit.org/ServiceMap/api/v1/shortestpath/?source=" + gpsCoordinates[0] + ";" + gpsCoordinates[1] + '&destination=' + ComportamentoVirtuoso.destination + '&format=json';
           ComportamentoVirtuoso.print('query : ' + pathQuery);
           ComportamentoVirtuoso.executeCustomQuery(pathQuery, ComportamentoVirtuoso.searchInformationForEachFeature, ComportamentoVirtuoso.errorQuery);
         }
