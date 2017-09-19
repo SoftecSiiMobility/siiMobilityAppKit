@@ -64,6 +64,16 @@ var ComportamentoVirtuoso = {
       document.removeEventListener('backbutton', ComportamentoVirtuoso.backButtonCallback);
     },
 
+    backButtonCallback: function()
+    {
+      if(ComportamentoVirtuoso.vectorLayer != null)
+      {
+          MapManager.map.removeLayer(ComportamentoVirtuoso.vectorLayer);
+      }
+      document.removeEventListener('backbutton', ComportamentoVirtuoso.backButtonCallback);
+    },
+
+
     reloadMenu: function ()
     {
         ComportamentoVirtuoso.print('on ReloadMenu');
@@ -276,6 +286,8 @@ var ComportamentoVirtuoso = {
             features: [feature]
           })
       });
+      ComportamentoVirtuoso.vectorLayer = vector;
+      MapManager.map.addLayer(vector);
     },
 
     executeCustomQuery: function(url, successCallback, errorCallback) {
