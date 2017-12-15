@@ -54,20 +54,27 @@ var SarebbeOpportunoChe = {
         }
 
         MapManager.map.addEventListener('singleclick', SarebbeOpportunoChe.mapClick, false);
+        MapManager.map.addEventListener('dblclick', SarebbeOpportunoChe.mapClick, false);
         document.addEventListener('backbutton', SarebbeOpportunoChe.backButtonCallback, false);
     },
 
     backButtonCallback: function()
     {
-      $( "#insertSegnalazione" ).remove();
+      $("#insertSegnalazione").remove();
+
       MapManager.map.removeEventListener('singleclick', SarebbeOpportunoChe.mapClick);
+      MapManager.map.removeEventListener('dblclick', SarebbeOpportunoChe.mapClick);
       document.removeEventListener('backbutton', SarebbeOpportunoChe.backButtonCallback);
     },
 
     mapClick: function ()
     {
       SarebbeOpportunoChe.print('on map click');
+
+      // @TODO: migliorare il modo di visualizzare il link all'inserisci segnalazione
+      $("#insertSegnalazione").remove();
       $('.popover-content').append('<h4 id="insertSegnalazione"><a onclick="SarebbeOpportunoChe.insertSegnalazione()">Inserisci segnalazione</a></h4>');
+
       SarebbeOpportunoChe.coordinate = MapManager.manualMarkerCoordinates();
     },
 
