@@ -1,0 +1,29 @@
+﻿{
+  "principalMenu": {
+    "titoloNelMenuPrincipaleComportamentoVirtuoso": "Comportamento Virtuoso"
+  },
+  "menuComportamentoVirtuoso": {
+    "title": "Risultati"
+  },
+  "recordingAlert": {
+    "recordingStart": "Avvia registrazione",
+    "recordingStop": "Interrompi registrazione",
+    "recordingSave": "Salva percorso",
+
+    "recordingStartConfirm": "Vuoi avviare la registrazione dell'itinerario?",
+    "recordingStopConfirm": "Vuoi interrompere la registrazione dell'itinerario?",
+    "recordingSaveConfirm": "Vuoi salvare l'itinerario registrato ed inviarlo a Sii-Mobility?",
+    "recordingStartConfirm": "Vuoi avviare la registrazione dell'itinerario?",
+    "recordingStopConfirm": "Vuoi interrompere la registrazione dell'itinerario?",
+    "recordingSaveConfirm": "Vuoi salvare l'itinerario registrato ed inviarlo a Sii-Mobility?",
+
+    "recordingConfirm": "Conferma",
+    "recordingCancel": "Annulla",
+
+    "recordingSavePath": "Salva",
+    "recordingSaveNoPath": "Non salvare",
+
+    "recordingForceStop": "Registrazione itinerario in corso",
+    "recordingForceStopConfirm": "Se esci durante la registrazione dell'itinerario, perderai il percorso salvato fino a questo momento. Vuoi comunque uscire dal modulo?"
+  }
+}
