@@ -457,8 +457,7 @@ var ComportamentoVirtuoso = {
     search: function ()
     {
         ComportamentoVirtuoso.print('on Search');
-        // Utile al fine di debug, viene passato l'URI del servizio o POI oppure coordinare geografiche
-        ComportamentoVirtuoso.calculatePath('http://www.disit.org/km4city/resource/ad77f05cc308d96163c455e806b2694d');
+
     },
 
     searchInformationForEachFeature: function (response)
